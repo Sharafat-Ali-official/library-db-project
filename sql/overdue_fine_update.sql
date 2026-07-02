@@ -23,7 +23,7 @@ BEGIN
     LOOP
   
         
-        v_days_overdue := EXTRACT(DAY FROM v_borrow_record.days_overdue);
+        v_days_overdue := v_borrow_record.days_overdue;
         v_fine_amount := v_days_overdue * 0.50;
 
        
@@ -51,3 +51,13 @@ $$;
 
 --testing 
 CALL process_overdue_fines();
+
+SELECT 
+    m.full_name,
+    b.title AS book_title,
+    f.fine_amount,
+    f.paid_status
+FROM fines f
+JOIN members m ON m.id = f.member_id
+JOIN borrows br ON br.id = f.borrow_id
+JOIN books b ON b.id = br.book_id;
